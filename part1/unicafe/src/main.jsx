@@ -28,7 +28,11 @@ const StatisticLine = ({ text, value }) => {
     </p>
   );
 };
-
+/**
+ * Component that contains StatisticLine
+ * @param {*} param0
+ * @returns
+ */
 const Statistics = ({ good, neutral, bad }) => {
   const total = good + neutral + bad;
   const average = (good - bad) / total;
