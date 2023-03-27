@@ -1,5 +1,9 @@
 import { useState } from "react";
 
+const Heading = ({ title }) => {
+  return <h1>{title}</h1>;
+};
+
 const Button = ({ onClick, text }) => {
   return (
     <>
@@ -8,11 +12,29 @@ const Button = ({ onClick, text }) => {
   );
 };
 
-const DisplayAnecdotes = ({ anecdote }) => {
+const DisplayAnecdotes = ({ anecdote, votes }) => {
   return (
     <div>
       <p>{anecdote}</p>
+      <p>has {votes} votes</p>
     </div>
+  );
+};
+
+const MostVoted = ({ ancedotes, votes }) => {
+  const arr = Object.values(votes);
+  const maxVotes = Math.max(...arr);
+  const mostVotedIndex = arr.indexOf(maxVotes);
+
+  if (maxVotes === 0) {
+    return (
+      <div>
+        <p>No votes yet</p>
+      </div>
+    );
+  }
+  return (
+    <DisplayAnecdotes anecdote={ancedotes[mostVotedIndex]} votes={maxVotes} />
   );
 };
 
@@ -29,15 +51,38 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState({
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+  });
 
   const nextAnecdote = () => {
     let number = Math.floor(Math.random() * anecdotes.length);
     setSelected(number);
   };
+
+  const vote = () => {
+    let points = { ...votes };
+    points[selected] += 1;
+    setVotes(points);
+  };
   return (
     <div>
-      <DisplayAnecdotes anecdote={anecdotes[selected]} />
+      <Heading title={"Anecdote of the day"} />
+      <DisplayAnecdotes
+        anecdote={anecdotes[selected]}
+        votes={votes[selected]}
+      />
+      <Button onClick={() => vote} text={"Vote"} />
       <Button onClick={() => nextAnecdote} text={"Next Anecdote"} />
+      <Heading title={"Anecdote with most votes"} />
+      <MostVoted ancedotes={anecdotes} votes={votes} />
     </div>
   );
 };
