@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 
+/**
+ * Component Button
+ * @param {*} param0
+ * @returns
+ */
 const Button = ({ onClick, text }) => {
   return (
     <>
@@ -8,7 +13,11 @@ const Button = ({ onClick, text }) => {
     </>
   );
 };
-
+/**
+ * Componen Statistics to display text information
+ * @param {*} param0
+ * @returns
+ */
 const Statistics = ({ text, value }) => {
   return (
     <p>
@@ -16,7 +25,10 @@ const Statistics = ({ text, value }) => {
     </p>
   );
 };
-
+/**
+ * Main Component
+ * @returns
+ */
 const App = () => {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
