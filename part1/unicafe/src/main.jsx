@@ -21,17 +21,24 @@ const App = () => {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
+  const [all, setAll] = useState(0);
 
+  const setValueAvarage = () => {
+    setAll(all + 1);
+  };
   const setValueGood = () => {
     setGood(good + 1);
+    setValueAvarage();
   };
 
   const setValueNeutral = () => {
     setNeutral(neutral + 1);
+    setValueAvarage();
   };
 
   const setValueBad = () => {
     setBad(bad + 1);
+    setValueAvarage();
   };
   return (
     <div>
@@ -43,6 +50,15 @@ const App = () => {
       <Statistics text={"Good"} value={good} />
       <Statistics text={"Neutral"} value={neutral} />
       <Statistics text={"Bad"} value={bad} />
+      <Statistics text={"All"} value={all} />
+      <Statistics
+        text={"Average"}
+        value={all === 0 ? "0" : Math.abs(good - bad) / all}
+      />
+      <Statistics
+        text={"Positive"}
+        value={all === 0 ? "0%" : (good * 100) / all + "%"}
+      />
     </div>
   );
 };
