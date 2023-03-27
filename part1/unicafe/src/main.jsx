@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 
+const Heading = ({ text }) => {
+  return <h1>{text}</h1>;
+};
 /**
  * Component Button
  * @param {*} param0
@@ -18,11 +21,31 @@ const Button = ({ onClick, text }) => {
  * @param {*} param0
  * @returns
  */
-const Statistics = ({ text, value }) => {
+const StatisticLine = ({ text, value }) => {
   return (
     <p>
       {text} {value}
     </p>
+  );
+};
+
+const Statistics = ({ good, neutral, bad }) => {
+  const total = good + neutral + bad;
+  const average = (good - bad) / total;
+  const positive = (good / total) * 100;
+
+  if (total === 0) {
+    return <div>No feedback given</div>;
+  }
+  return (
+    <div>
+      <StatisticLine text={"Good"} value={good} />
+      <StatisticLine text={"Neutral"} value={neutral} />
+      <StatisticLine text={"Bad"} value={bad} />
+      <StatisticLine text={"All"} value={total} />
+      <StatisticLine text={"Average"} value={average} />
+      <StatisticLine text={"Positive"} value={positive + "%"} />
+    </div>
   );
 };
 /**
@@ -33,44 +56,26 @@ const App = () => {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
-  const [all, setAll] = useState(0);
 
-  const setValueAvarage = () => {
-    setAll(all + 1);
-  };
-  const setValueGood = () => {
-    setGood(good + 1);
-    setValueAvarage();
+  const setValueGood = (good) => {
+    setGood(good);
   };
 
   const setValueNeutral = () => {
-    setNeutral(neutral + 1);
-    setValueAvarage();
+    setNeutral(neutral);
   };
 
-  const setValueBad = () => {
-    setBad(bad + 1);
-    setValueAvarage();
+  const setValueBad = (bad) => {
+    setBad(bad);
   };
   return (
     <div>
-      <h1>Give feedback</h1>
-      <Button onClick={() => setValueGood()} text={"Good"} />
-      <Button onClick={() => setValueNeutral()} text={"neutral"} />
-      <Button onClick={() => setValueBad()} text={"bad"} />
-      <h1>Statistics</h1>
-      <Statistics text={"Good"} value={good} />
-      <Statistics text={"Neutral"} value={neutral} />
-      <Statistics text={"Bad"} value={bad} />
-      <Statistics text={"All"} value={all} />
-      <Statistics
-        text={"Average"}
-        value={all === 0 ? "0" : Math.abs(good - bad) / all}
-      />
-      <Statistics
-        text={"Positive"}
-        value={all === 0 ? "0%" : (good * 100) / all + "%"}
-      />
+      <Heading text={"Give feedback"} />
+      <Button onClick={() => setValueGood(good + 1)} text={"Good"} />
+      <Button onClick={() => setValueNeutral(neutral + 1)} text={"neutral"} />
+      <Button onClick={() => setValueBad(bad + 1)} text={"bad"} />
+      <Heading text={"Statistics"} />
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   );
 };
