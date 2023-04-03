@@ -41,6 +41,7 @@ const Header = ({title}) => {
  * main component that is exported
  */
 const Course = ({course}) => {
+    console.log(course)
     return (
         <div>
           <Header title={course.name} />
