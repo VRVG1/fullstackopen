@@ -1,44 +1,30 @@
-import { useState } from 'react'
-
-const Persons = ({personsToShow}) => {
-
-  return (
-    <div>
-      <ul>
-      {personsToShow.map((person) => {
-        return (<li key={person.name}>{person.name}</li>)
-      })}
-      </ul>
-    </div>
-  )
-}
-
+import { useState } from "react"
+import Persons from "./components/Persons"
 
 const App = () => {
-  const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas' }
-  ]) 
-  const [ newName, setNewName ] = useState('')
+  const [persons, setPersons] = useState([
+    { name: "Arto Hellas", number: "040-123456" },
+  ])
+  const [newName, setNewName] = useState({
+    name: "",
+    number: "",
+  })
 
   const addPerson = (event) => {
-    event.preventDefault();
-    const newPerson = {
-      name: newName,
-    }
-    
-    const nameAlready = persons.filter(
-      (person) => person.name === newPerson.name
-    )
+    event.preventDefault()
+
+    const nameAlready = persons.filter((person) => person.name === newName.name)
     if (nameAlready.length === 0) {
-      setPersons(persons.concat(newPerson))
+      setPersons(persons.concat(newName))
     } else {
-      alert(`${newPerson.name} is already added to phonebook`)
+      alert(`${newName.name} is already added to phonebook`)
     }
-    setNewName('')
+    setNewName({ name: "", number: "" })
   }
 
   const handleOnChange = (event) => {
-    setNewName(event.target.value)
+    const { name, value } = event.target
+    setNewName({ ...newName, [name]: value })
   }
 
   return (
@@ -46,7 +32,16 @@ const App = () => {
       <h2>Phonebook</h2>
       <form onSubmit={addPerson}>
         <div>
-          name: <input onChange={handleOnChange} value={newName}/>
+          name:{" "}
+          <input name={"name"} onChange={handleOnChange} value={newName.name} />
+        </div>
+        <div>
+          number:{" "}
+          <input
+            name={"number"}
+            onChange={handleOnChange}
+            value={newName.number}
+          />
         </div>
         <div>
           <button type="submit">add</button>
