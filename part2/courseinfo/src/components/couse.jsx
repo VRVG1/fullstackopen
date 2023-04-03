@@ -1,56 +1,49 @@
 import React from "react";
 /**
  * App Header
- * @param {*} props
- * @returns
  **/
-const Header = (props) => {
-    return <h1>{props.course}</h1>;
+const Header = ({title}) => {
+    return <h1>{title}</h1>;
   };
-  /**
-   * Refactor Content Component in to a Part component
-   * @param {*} props
-   * @returns JSX component
-   **/
-  const Part = (props) => {
+/**
+ * Refactor Content Component in to a Part component
+ */
+  const Part = ({name, exercises}) => {
     return (
-      <>
         <p>
-          {props.name} {props.exercises}
+          {name} {exercises}
         </p>
-      </>
     );
   };
   /**
    * App content
-   * @param {*} props
-   * @returns
    */
-  const Content = (props) => {
+  const Content = ({parts}) => {
     return (
-      <>
-        <Part name={props.parts[0].name} exercises={props.parts[0].exercises} />
-        <Part name={props.parts[1].name} exercises={props.parts[1].exercises} />
-        <Part name={props.parts[2].name} exercises={props.parts[2].exercises} />
-        <Part name={props.parts[3].name} exercises={props.parts[3].exercises} />
-      </>
+      <div>
+      {parts.map((part) => {
+        return (<Part key={part.id} name={part.name} exercises={part.exercises} />)
+      })}
+      </div>
     );
   };
   /**import React from "react";
    * Total App
-   * @param {*} props
-   * @returns
    */
-  const Total = (props) => {
-    let total = 0;
-    props.parts.map((item) => (total += item.exercises));
+  const Total = ({parts}) => {
+    const total = parts.reduce((s, p) => {
+        return s + p.exercises;
+    }, 0)
     return <p>Number of exercises {total}</p>;
   };
 
+/**
+ * main component that is exported
+ */
 const Course = ({course}) => {
     return (
         <div>
-          <Header course={course.name} />
+          <Header title={course.name} />
           <Content parts={course.parts} />
           <Total parts={course.parts} />
         </div>
