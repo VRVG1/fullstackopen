@@ -1,6 +1,7 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
 import Countries from "./components/Countries"
+import CountryInfo from "./components/CountryInfo"
 
 function App() {
   const [countries, setCountries] = useState([])
@@ -36,11 +37,17 @@ function App() {
         />
       </div>
       <div>
+        {countriesToShow.length === 1 ? (
+          <CountryInfo country={countriesToShow[0]} />
+        ) : null}
         {countriesToShow.length > 10 ? (
           <div>Too many matches, specify another filter</div>
         ) : (
           <div>
-            <Countries countries={countriesToShow} />
+            <Countries
+              countries={countriesToShow}
+              setCountriesToShow={setCountriesToShow}
+            />
           </div>
         )}
       </div>
