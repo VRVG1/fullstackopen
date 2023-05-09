@@ -35,7 +35,20 @@ const App = () => {
           console.error(error)
         })
     } else {
-      alert(`${newName.name} is already added to phonebook`)
+      if (
+        window.confirm(
+          `${nameAlready} is already added to phonebook, replace old number with new one?`
+        )
+      ) {
+        personsServices.update(nameAlready[0].id, newName).then((response) => {
+          const updatePersons = persons.map((person) => {
+            return person.id !== response.id ? person : response
+          })
+          setPersons(updatePersons)
+          setPersonstoShow(updatePersons)
+          window.alert(`Updated ${newName.name}'s number`)
+        })
+      }
     }
     setNewName({ name: "", number: "" })
   }
