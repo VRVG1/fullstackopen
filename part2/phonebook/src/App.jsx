@@ -40,6 +40,18 @@ const App = () => {
     setNewName({ name: "", number: "" })
   }
 
+  const deletePerson = (id, name) => {
+    if (
+      window.confirm(`Are you sure you want to delete ${name} from phonebook?`)
+    ) {
+      personsServices.remove(id).then((response) => {
+        const updatePersons = persons.filter((persons) => persons.id !== id)
+        setPersons(updatePersons)
+        setPersonstoShow(updatePersons)
+        window.alert(`Removed ${name} from phonebook`)
+      })
+    }
+  }
   const handleOnChange = (event) => {
     const { name, value } = event.target
     setNewName({ ...newName, [name]: value })
@@ -65,7 +77,7 @@ const App = () => {
         value2={newName.number}
       />
       <h2>Numbers</h2>
-      <Persons personsToShow={personstoShow} />
+      <Persons personsToShow={personstoShow} deletePerson={deletePerson} />
     </div>
   )
 }
