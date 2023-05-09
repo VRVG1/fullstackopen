@@ -1,7 +1,7 @@
 const Filter = ({ filterBy, handleOnChangeFilter }) => {
   return (
     <div>
-      <label for="filtro">Filter shown with</label>
+      <label htmlFor="filtro">Filter shown with</label>
       <input
         type="text"
         name="filtro"

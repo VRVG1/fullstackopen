@@ -2,7 +2,7 @@ const PersonForm = ({ addPerson, handleOnChange, value1, value2 }) => {
   return (
     <form onSubmit={addPerson}>
       <div>
-        <label for="name">Name</label>
+        <label htmlFor="name">Name</label>
         <input
           type="text"
           name="name"
@@ -11,7 +11,7 @@ const PersonForm = ({ addPerson, handleOnChange, value1, value2 }) => {
         />
       </div>
       <div>
-        <label for="number">Number</label>
+        <label htmlFor="number">Number</label>
         <input
           type="text"
           name="number"
