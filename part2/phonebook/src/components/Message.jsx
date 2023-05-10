@@ -2,7 +2,10 @@ const Message = ({ message }) => {
   if (message === null) {
     return
   }
-  if (message.includes("failed") || message.includes("Removed")) {
+  if (
+    message.toLowerCase().includes("failed") ||
+    message.toLowerCase().includes("removed")
+  ) {
     return (
       <div className="message-container-error">
         <h2>{message}</h2>

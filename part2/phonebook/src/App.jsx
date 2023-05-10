@@ -51,14 +51,21 @@ const App = () => {
           `${nameAlready} is already added to phonebook, replace old number with new one?`
         )
       ) {
-        personsServices.update(nameAlready[0].id, newName).then((response) => {
-          const updatePersons = persons.map((person) => {
-            return person.id !== response.id ? person : response
+        personsServices
+          .update(nameAlready[0].id, newName)
+          .then((response) => {
+            const updatePersons = persons.map((person) => {
+              return person.id !== response.id ? person : response
+            })
+            setPersons(updatePersons)
+            setPersonstoShow(updatePersons)
+            setMessage(`Updated ${newName.name}'s number`)
           })
-          setPersons(updatePersons)
-          setPersonstoShow(updatePersons)
-          setMessage(`Updated ${newName.name}'s number`)
-        })
+          .catch((error) => {
+            setMessage(
+              `Information of ${newName.name} has already been removed from server`
+            )
+          })
       }
     }
     setNewName({ name: "", number: "" })
