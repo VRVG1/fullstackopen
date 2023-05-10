@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import Persons from "./components/Persons"
 import Filter from "./components/filter"
 import PersonForm from "./components/PersonForm"
-import axios from "axios"
+import Message from "./components/Message"
 
 // services
 import personsServices from "./services/persons"
@@ -12,6 +12,7 @@ const App = () => {
   const [personstoShow, setPersonstoShow] = useState([])
   const [newName, setNewName] = useState({ name: "", number: "" })
   const [filterBy, setFilterBy] = useState({ name: "" })
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     personsServices.getAll().then((response) => {
@@ -19,6 +20,15 @@ const App = () => {
       setPersonstoShow(response)
     })
   }, [])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [message])
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -30,9 +40,10 @@ const App = () => {
         .then((response) => {
           setPersons(persons.concat(response))
           setPersonstoShow(persons.concat(response))
+          setMessage(`Added ${newName.name}`)
         })
         .catch((error) => {
-          console.error(error)
+          setMessage(`failed add ${newName.name}`)
         })
     } else {
       if (
@@ -46,7 +57,7 @@ const App = () => {
           })
           setPersons(updatePersons)
           setPersonstoShow(updatePersons)
-          window.alert(`Updated ${newName.name}'s number`)
+          setMessage(`Updated ${newName.name}'s number`)
         })
       }
     }
@@ -61,7 +72,7 @@ const App = () => {
         const updatePersons = persons.filter((persons) => persons.id !== id)
         setPersons(updatePersons)
         setPersonstoShow(updatePersons)
-        window.alert(`Removed ${name} from phonebook`)
+        setMessage(`Removed ${name} from phonebook`)
       })
     }
   }
@@ -80,6 +91,7 @@ const App = () => {
 
   return (
     <div>
+      <Message message={message} />
       <h2>Phonebook</h2>
       <Filter filterBy={filterBy} handleOnChangeFilter={handleOnChangeFilter} />
       <h2>Add a new</h2>
