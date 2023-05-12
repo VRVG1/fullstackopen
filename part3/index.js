@@ -61,15 +61,25 @@ app.delete("/api/persons/:id", (request, response) => {
 
 app.post("/api/persons", bodyParser.json(), (request, response) => {
   const body = request.body
-  if (!body.name) {
+  if (!body.name || !body.number) {
     return response.status(400).json({
-      error: "content missing",
+      error: "name and number are required",
+    })
+  }
+  if (persons.find((person) => person.name === body.name)) {
+    return response.status(400).json({
+      error: "name already in phonebook",
+    })
+  }
+  if (persons.find((person) => person.number === body.number)) {
+    return response.status(400).json({
+      error: "number already in phonebook",
     })
   }
 
   const person = {
     name: body.name,
-    number: "39-23-6423122",
+    number: body.number,
     id: generateId(),
   }
 
