@@ -1,5 +1,6 @@
 const express = require("express")
 const app = express()
+const bodyParser = require("body-parser")
 
 let persons = [
   {
@@ -23,6 +24,11 @@ let persons = [
     id: 4,
   },
 ]
+
+const generateId = () => {
+  return Math.floor(Math.random() * 1000000) + 1
+}
+
 /**
  * Retrieve all persons from the server and return them as a JSON response
  */
@@ -51,6 +57,25 @@ app.delete("/api/persons/:id", (request, response) => {
   persons = persons.filter((person) => person.id !== id)
 
   response.status(204).end()
+})
+
+app.post("/api/persons", bodyParser.json(), (request, response) => {
+  const body = request.body
+  if (!body.name) {
+    return response.status(400).json({
+      error: "content missing",
+    })
+  }
+
+  const person = {
+    name: body.name,
+    number: "39-23-6423122",
+    id: generateId(),
+  }
+
+  persons = persons.concat(person)
+
+  response.json(person)
 })
 /**
  * Set the server to listen on port 3001 and log a message to the console when it starts running
