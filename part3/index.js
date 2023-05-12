@@ -45,6 +45,13 @@ app.get("/api/persons/:id", (request, response) => {
   const person = persons.filter((person) => person.id === id)
   person ? response.json(person) : response.status(404).end()
 })
+
+app.delete("/api/persons/:id", (request, response) => {
+  const id = Number(request.params.id)
+  persons = persons.filter((person) => person.id !== id)
+
+  response.status(204).end()
+})
 /**
  * Set the server to listen on port 3001 and log a message to the console when it starts running
  */
