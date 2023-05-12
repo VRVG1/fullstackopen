@@ -23,11 +23,16 @@ let persons = [
     id: 4,
   },
 ]
-
+/**
+ * Retrieve all persons from the server and return them as a JSON response
+ */
 app.get("/api/persons", (request, response) => {
   response.json(persons)
 })
 
+/**
+ * Return information about the phonebook, including the number of people and the current date
+ */
 app.get("/info", (request, response) => {
   response.send(`
     <p>Phonebook has info for ${persons.length} people.</p>
@@ -35,6 +40,14 @@ app.get("/info", (request, response) => {
   `)
 })
 
+app.get("/api/persons/:id", (request, response) => {
+  const id = Number(request.params.id)
+  const person = persons.filter((person) => person.id === id)
+  person ? response.json(person) : response.status(404).end()
+})
+/**
+ * Set the server to listen on port 3001 and log a message to the console when it starts running
+ */
 const PORT = 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
