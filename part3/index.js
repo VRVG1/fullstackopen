@@ -2,6 +2,8 @@ const express = require("express")
 const app = express()
 const bodyParser = require("body-parser")
 const morgan = require("morgan")
+const cors = require('cors')
+
 
 let persons = [
   {
@@ -32,7 +34,7 @@ let persons = [
 morgan.token('body', (request) => JSON.stringify(request.body))
 
 app.use(morgan(":method :url :status :res[content-length] - :response-time ms :body"))
-
+app.use(cors())
 const generateId = () => {
   return Math.floor(Math.random() * 1000000) + 1
 }
@@ -98,7 +100,7 @@ app.post("/api/persons", bodyParser.json(), (request, response) => {
 /**
  * Set the server to listen on port 3001 and log a message to the console when it starts running
  */
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
