@@ -1,6 +1,7 @@
 const express = require("express")
 const app = express()
 const bodyParser = require("body-parser")
+const morgan = require("morgan")
 
 let persons = [
   {
@@ -24,6 +25,13 @@ let persons = [
     id: 4,
   },
 ]
+
+/**
+* Custom token for morgan
+*/
+morgan.token('body', (request) => JSON.stringify(request.body))
+
+app.use(morgan(":method :url :status :res[content-length] - :response-time ms :body"))
 
 const generateId = () => {
   return Math.floor(Math.random() * 1000000) + 1
