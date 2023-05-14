@@ -5,7 +5,7 @@ const morgan = require("morgan")
 const cors = require('cors')
 
 // Forntend
-app.use(express.static('dist'))
+app.use(express.static('build'))
 
 let persons = [
   {
