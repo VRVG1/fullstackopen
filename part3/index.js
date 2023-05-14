@@ -4,6 +4,8 @@ const bodyParser = require("body-parser")
 const morgan = require("morgan")
 const cors = require('cors')
 
+// Forntend
+app.use(express.static('dist'))
 
 let persons = [
   {
