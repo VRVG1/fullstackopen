@@ -43,12 +43,20 @@ app.get("/info", (request, response) => {
 })
 
 app.get("/api/persons/:id", (request, response) => {
-  // const id = Number(request.params.id)
-  // const person = persons.filter((person) => person.id === id)
-  // person ? response.json(person) : response.status(404).end()
-  Contact.findById(request.params.id).then((contact) => {
-    response.json(contact)
-  })
+  const id = Number(request.params.id)
+  const person = persons.filter((person) => person.id === id)
+  person ? response.json(person) : response.status(404).end()
+  // Contact.findById(request.params.id)
+  //   .then((contact) => {
+  //     if (contact) {
+  //       response.json(contact)
+  //     } else {
+  //       response.status(404).end()
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     console.log(err)
+  //   })
 })
 
 app.delete("/api/persons/:id", (request, response) => {
