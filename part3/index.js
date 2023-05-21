@@ -59,32 +59,46 @@ app.delete("/api/persons/:id", (request, response) => {
 })
 
 app.post("/api/persons", bodyParser.json(), (request, response) => {
+  // const body = request.body
+  // if (!body.name || !body.number) {
+  //   return response.status(400).json({
+  //     error: "name and number are required",
+  //   })
+  // }
+  // if (persons.find((person) => person.name === body.name)) {
+  //   return response.status(400).json({
+  //     error: "name already in phonebook",
+  //   })
+  // }
+  // if (persons.find((person) => person.number === body.number)) {
+  //   return response.status(400).json({
+  //     error: "number already in phonebook",
+  //   })
+  // }
+  // const person = {
+  //   name: body.name,
+  //   number: body.number,
+  //   id: generateId(),
+  // }
+  // persons = persons.concat(person)
+  // response.json(person)
   const body = request.body
+
   if (!body.name || !body.number) {
     return response.status(400).json({
       error: "name and number are required",
     })
   }
-  if (persons.find((person) => person.name === body.name)) {
-    return response.status(400).json({
-      error: "name already in phonebook",
-    })
-  }
-  if (persons.find((person) => person.number === body.number)) {
-    return response.status(400).json({
-      error: "number already in phonebook",
-    })
-  }
 
-  const person = {
+  const contact = new Contact({
     name: body.name,
     number: body.number,
     id: generateId(),
-  }
+  })
 
-  persons = persons.concat(person)
-
-  response.json(person)
+  contact.save().then((savedContact) => {
+    response.json(savedContact)
+  })
 })
 
 const PORT = process.env.PORT
