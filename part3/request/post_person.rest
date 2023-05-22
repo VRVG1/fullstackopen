@@ -2,11 +2,11 @@ POST http://localhost:3001/api/persons HTTP/1.1
 content-type: application/json
 
 {
-    "name": "sr",
-    "number": "11111111"
+    "name": "servgsio",
+    "number": "33-3333333"
 }
 ###
-DELETE http://localhost:3001/api/persons/646ae61deb511330adf30078 HTTP/1.11
+DELETE http://localhost:3001/api/persons/646ade0281a8f1befa8da255 HTTP/1.11
 
 ###
 GET http://localhost:3001/api/persons HTTP/1.1
@@ -20,5 +20,5 @@ Content-Type: application/json
 
 {
     "name": "sergio",
-    "number": "2"
+    "number": "22222222"
 }

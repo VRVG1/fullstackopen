@@ -44,17 +44,7 @@ const App = () => {
         })
         .catch((error) => {
           const errorLog = error.response.data.error
-          if (errorLog.includes("name") && errorLog.includes("number")) {
-            setMessage(`failed, ${newName.name} must be 3 character or more ${newName.number} must be 8 digits or more`)
-          } else if (errorLog.includes("name")
-          ) {
-            setMessage(`failed, ${newName.name} must be 3 character or more`)
-          } else if (errorLog.includes("number")
-          ) {
-            setMessage(`failed, ${newName.number} must be 8 digits or more`)
-          } else {
-            setMessage(`failed add ${newName.name}`)
-          }
+          setMessage(errorLog)
         })
     } else {
       if (
@@ -74,13 +64,7 @@ const App = () => {
           })
           .catch((error) => {
             const errorLog = error.response.data.error
-            if (errorLog.includes("number")) {
-              setMessage(`failed, ${newName.number} must be 8 digits or more`)
-            } else {
-              setMessage(
-                `Information of ${newName.name} has already been removed from server`
-              )
-            }
+            setMessage(errorLog)
           })
       }
     }
