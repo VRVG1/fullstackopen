@@ -54,11 +54,13 @@ app.get("/api/persons/:id", (request, response, next) => {
 })
 
 app.delete("/api/persons/:id", (request, response, next) => {
-  Contact.findByIdAndRemove(request.params.id).then(result => {
-    response.status(204).end()
-  }).catch((error) => {
-    next(error)
-  })
+  Contact.findByIdAndRemove(request.params.id)
+    .then((result) => {
+      response.status(204).end()
+    })
+    .catch((error) => {
+      next(error)
+    })
 })
 
 app.post("/api/persons", bodyParser.json(), (request, response) => {
@@ -80,8 +82,25 @@ app.post("/api/persons", bodyParser.json(), (request, response) => {
   })
 })
 
+app.put("/api/persons/:id", bodyParser.json(), (request, response, next) => {
+  const body = request.body
+
+  const contact = {
+    name: body.name,
+    number: body.number,
+  }
+
+  Contact.findByIdAndUpdate(request.params.id, contact, { new: true })
+    .then((result) => {
+      response.json(result)
+    })
+    .catch((error) => {
+      next(error)
+    })
+})
+
 const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' })
+  response.status(404).send({ error: "unknown endpoint" })
 }
 
 app.use(unknownEndpoint)

@@ -6,7 +6,19 @@ content-type: application/json
     "number": "1234567890s"
 }
 ###
-DELETE http://localhost:3001/api/persons/64697f6e9523cdd89e9f0091 HTTP/1.11
+DELETE http://localhost:3001/api/persons/646ae2c72aa45abe9ed263e2 HTTP/1.11
 
 ###
 GET http://localhost:3001/api/persons HTTP/1.1
+###
+
+GET http://localhost:3001/api/persons/646ae2ec2aa45abe9ed263e7 HTTP/1.1
+
+###
+put http://localhost:3001/api/persons/646ae2ec2aa45abe9ed263e7 HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Arto Hellasss",
+    "number": "1"
+}

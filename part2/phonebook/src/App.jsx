@@ -48,7 +48,7 @@ const App = () => {
     } else {
       if (
         window.confirm(
-          `${nameAlready} is already added to phonebook, replace old number with new one?`
+          `${nameAlready[0].name} is already added to phonebook, replace old number with new one?`
         )
       ) {
         personsServices
