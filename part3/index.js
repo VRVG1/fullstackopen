@@ -6,7 +6,6 @@ const cors = require("cors")
 const Contact = require("./phonebook")
 require("dotenv").config()
 
-// Forntend
 app.use(express.static("build"))
 
 /**
