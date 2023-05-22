@@ -17,10 +17,8 @@ morgan.token("body", (request) => JSON.stringify(request.body))
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 )
+
 app.use(cors())
-const generateId = () => {
-  return Math.floor(Math.random() * 1000000) + 1
-}
 
 /**
  * Retrieve all persons from the server and return them as a JSON response
@@ -42,54 +40,29 @@ app.get("/info", (request, response) => {
   `)
 })
 
-app.get("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id)
-  const person = persons.filter((person) => person.id === id)
-  person ? response.json(person) : response.status(404).end()
-  // Contact.findById(request.params.id)
-  //   .then((contact) => {
-  //     if (contact) {
-  //       response.json(contact)
-  //     } else {
-  //       response.status(404).end()
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     console.log(err)
-  //   })
+app.get("/api/persons/:id", (request, response, next) => {
+  Contact.findById(request.params.id)
+    .then((contact) => {
+      if (contact) {
+        response.json(contact)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch((error) => {
+      next(error)
+    })
 })
 
-app.delete("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id)
-  persons = persons.filter((person) => person.id !== id)
-
-  response.status(204).end()
+app.delete("/api/persons/:id", (request, response, next) => {
+  Contact.findByIdAndRemove(request.params.id).then(result => {
+    response.status(204).end()
+  }).catch((error) => {
+    next(error)
+  })
 })
 
 app.post("/api/persons", bodyParser.json(), (request, response) => {
-  // const body = request.body
-  // if (!body.name || !body.number) {
-  //   return response.status(400).json({
-  //     error: "name and number are required",
-  //   })
-  // }
-  // if (persons.find((person) => person.name === body.name)) {
-  //   return response.status(400).json({
-  //     error: "name already in phonebook",
-  //   })
-  // }
-  // if (persons.find((person) => person.number === body.number)) {
-  //   return response.status(400).json({
-  //     error: "number already in phonebook",
-  //   })
-  // }
-  // const person = {
-  //   name: body.name,
-  //   number: body.number,
-  //   id: generateId(),
-  // }
-  // persons = persons.concat(person)
-  // response.json(person)
   const body = request.body
 
   if (!body.name || !body.number) {
@@ -101,13 +74,28 @@ app.post("/api/persons", bodyParser.json(), (request, response) => {
   const contact = new Contact({
     name: body.name,
     number: body.number,
-    id: generateId(),
   })
 
   contact.save().then((savedContact) => {
     response.json(savedContact)
   })
 })
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+const errorhandler = (error, request, response, next) => {
+  console.log(error.message)
+  if (error.name === "CastError") {
+    return response.status(404).send({ error: "malformatted id" })
+  }
+  next(error)
+}
+
+app.use(errorhandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
