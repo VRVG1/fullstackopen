@@ -3,7 +3,7 @@ const app = express()
 const bodyParser = require("body-parser")
 const morgan = require("morgan")
 const cors = require("cors")
-const Contact = require("./phonebook")
+const Contact = require("./models/phonebook")
 require("dotenv").config()
 
 app.use(express.static("build"))
