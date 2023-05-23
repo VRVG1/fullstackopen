@@ -26,12 +26,22 @@ describe('Total likes', () => {
 })
 
 describe('Most liked blog', () => {
-  test('which one of blogs is most liked', () => {
+  test('when list has many blogs, equals to the most liked blog', () => {
     const result = listHelper.favoriteBlog(blogsList.manyBlogs)
     expect(result).toEqual({
       title: "Canonical string reduction",
       author: "Edsger W. Dijkstra",
       likes: 12
+    })
+  })
+})
+
+describe('Most blogs', () => {
+  test('when list has many blogs, equals to Robert C. Martin', () => {
+    const result = listHelper.mostBlogs(blogsList.manyBlogs)
+    expect(result).toEqual({
+      author: "Robert C. Martin",
+      blogs: 3
     })
   })
 })

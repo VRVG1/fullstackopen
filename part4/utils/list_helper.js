@@ -1,3 +1,5 @@
+const _ = require('lodash')
+
 const dummy = (blogs) => {
   return 1;
 }
@@ -20,8 +22,22 @@ const favoriteBlog = (blogs) => {
     likes: favorite.likes,
   }
 }
+
+const mostBlogs = (blogs) => {
+  const countAuthors = _.countBy(blogs, "author")
+  const author = Object.keys(countAuthors).reduce((a, b) => {
+    return countAuthors[a] > countAuthors[b] ? a : b
+  })
+
+  return {
+    author: author,
+    blogs: countAuthors[author]
+  }
+}
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs,
 }
