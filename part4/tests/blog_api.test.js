@@ -69,7 +69,20 @@ test('likes property defaults to 0 if missing', async () => {
 	expect(blogInDB[blogInDB.length - 1].likes).toBe(0)
 })
 
+//test 5
+test('url and title is required', async () => {
+	const newBlog = {
+		author: 'F. Scott Fitzgerald',
+	}
+    
+	await api
+		.post('/api/blog')
+		.send(newBlog)
+		.expect(404)
 
+	const blogInDB = await helper.blogsInDb()
+	expect(blogInDB).toHaveLength(helper.manyBlogs.length)
+})
 afterAll(async () => {
 	await mongoose.connection.close()
 })
