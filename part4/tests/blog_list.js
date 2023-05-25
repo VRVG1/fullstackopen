@@ -74,5 +74,5 @@ module.exports = {
 	zeroBlogs,
 	oneBlog,
 	manyBlogs,
-	blogsInDb,
+	blogsInDb
 }
