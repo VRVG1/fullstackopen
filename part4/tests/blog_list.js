@@ -1,3 +1,5 @@
+const Blog = require('../models/blog')
+
 const zeroBlogs = []
 
 const oneBlog = [
@@ -62,8 +64,15 @@ const manyBlogs = [
 	},
 ]
 
+
+const blogsInDb = async () => {
+	const blogs = await Blog.find({})
+	return blogs.map((blog) => blog.toJSON())
+}
+
 module.exports = {
 	zeroBlogs,
 	oneBlog,
 	manyBlogs,
+	blogsInDb,
 }
