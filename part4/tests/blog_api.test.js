@@ -95,17 +95,41 @@ describe('when a blogs is deleted', () => {
 	})
     
 	test('success with status 204 if is valid id', async () => {
-		const blogsAtStart = await Blog.find({})
+		const blogsAtStart = await helper.blogsInDb()
 		const blogToRemove = blogsAtStart[0]
 		await api
 			.delete(`/api/blogs/${blogToRemove.id}`)
 			.expect(204)
-		const blogsAtEnd = await Blog.find({})
+		const blogsAtEnd = await helper.blogsInDb()
 		expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
     
 		const titles = blogsAtEnd.map((blog) => blog.title)
 		expect(titles).not.toContain(blogToRemove.title)
 
+	})
+})
+
+describe('when a blogs is updated', () => {
+    	beforeEach(async () => {
+		await Blog.deleteMany({})
+		await Blog.insertMany(helper.manyBlogs)
+	})
+    
+	test('succeeds with status 200 if id is valid', async () => {
+		const blogsAtStart = await helper.blogsInDb()
+		const blogToUpdate = blogsAtStart[0]
+        
+		await api
+			.put(`/api/blogs/${blogToUpdate.id}`)
+			.send({
+				likes: 30000
+			})
+			.expect(200)
+        
+		const blogsAtEnd = await helper.blogsInDb()
+		const blogUpdated = blogsAtEnd[0]
+		expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
+		expect(blogUpdated.likes).toBe(30000)
 	})
 })
 
