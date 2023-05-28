@@ -5,8 +5,23 @@ POST http://localhost:3001/api/blogs HTTP/1.1
 Content-Type: application/json
 
 {
-    "title": "segundo blog",
+    "title": "sexo blog",
     "author": "yo",
     "url": "http://localhost:3001",
-    "likes": 3
+    "likes": 3,
+    "user": "6473bba1fcb9f34333f11ccf"
 }
+
+### 
+Post http://localhost:3001/api/users HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "ro2ot",
+    "name": "Sup2eruser",
+    "password": "sexo"
+}
+
+###
+# Get all users
+Get http://localhost:3001/api/users HTTP/1.1
