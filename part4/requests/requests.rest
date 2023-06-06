@@ -1,9 +1,12 @@
 GET http://localhost:3001/api/blogs HTTP/1.1
 
 ###
+#Get one blog
+GET http://localhost:3001/api/blogs/647f7aac3f5615009870349c HTTP/1.1
+###
 POST http://localhost:3001/api/blogs HTTP/1.1
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvMm90IiwiaWQiOiI2NDc0MDIxZTc1YTZjYzY0YjExNTcxNzYiLCJpYXQiOjE2ODYwNzYwNTUsImV4cCI6MTY4NjA3OTY1NX0.YBRDb8w9qM6yIZTc2IXz6QnlpMstL-53oVt8Ac1HMU0
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5vdmFsaWRvIiwiaWQiOiI2NDdmODAzNmVmYzQzYTY3Yjk1YmEyZjYiLCJpYXQiOjE2ODYwNzc1MDQsImV4cCI6MTY4NjA4MTEwNH0.CxesNfZDMIofjPxKGe7g7Qbjd1iojIGK52w8LycnqDQ
 
 {
     "title": "sexo sexo blog",
@@ -12,14 +15,21 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvM
     "likes": 3
 }
 
+###
+#Eliminar blog
+DELETE http://localhost:3001/api/blogs/647f7aac3f5615009870349c HTTP/1.1
+Content-Type: application/json
+
+
+
 ### 
 Post http://localhost:3001/api/users HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "ro2ot",
-    "name": "Sup2eruser",
-    "password": "sexo"
+    "username": "novalido",
+    "name": "novalido",
+    "password": "novalido"
 }
 
 ###
