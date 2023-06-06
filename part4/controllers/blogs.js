@@ -1,6 +1,5 @@
 const blogsRouter = require('express').Router()
-const Blog = require('../models/blog')
-const User = require('../models/users')
+const Blog = require('../models/blog')gt
 const jwt = require('jsonwebtoken')
 const config = require('../utils/config')
 
