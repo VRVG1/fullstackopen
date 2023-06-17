@@ -4,6 +4,10 @@ const app = require('../app')
 const helper = require('./blog_list')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const config = require('../utils/config')
+const User = require('../models/users')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 beforeEach(async () => {
 	await Blog.deleteMany({})
@@ -30,8 +34,18 @@ describe('when there is initially some blogs saved', () => {
 })
 
 describe('when a new blog is created', () => { 
+	let token = null
+	beforeAll(async () => {
+		await User.deleteMany({})
+
+		const passwordHash = await bcrypt.hash('sexo', 10)
+		const user = await new User({ username: 'ro2ot', passwordHash }).save()
+
+		const userForToken = { username: 'ro2ot', id: user.id }
+		return (token = jwt.sign(userForToken, config.SECRET))
+	})
 	// test 3
-	test('a valid blog can be created', async () => {
+	test('a valid blog can be created by authorizated user', async () => {
 		const newBlog = {
 			title: 'The Great Gatsby',
 			author: 'F. Scott Fitzgerald',
@@ -41,6 +55,7 @@ describe('when a new blog is created', () => {
         
 		await api
 			.post('/api/blogs')
+			.set('Authorization', `bearer ${token}`)
 			.send(newBlog)
 			.expect(201)
 			.expect('Content-Type', /application\/json/)
@@ -63,6 +78,7 @@ describe('when a new blog is created', () => {
         
 		await api
 			.post('/api/blogs')
+			.set('Authorization', `bearer ${token}`)
 			.send(newBlog)
 			.expect(201)
 			.expect('Content-Type', /application\/json/)
@@ -80,6 +96,7 @@ describe('when a new blog is created', () => {
         
 		await api
 			.post('/api/blog')
+			.set('Authorization', `earer ${token}`)
 			.send(newBlog)
 			.expect(404)
     
@@ -88,52 +105,85 @@ describe('when a new blog is created', () => {
 	})
 })
 
-describe('when a blogs is deleted', () => {
+describe('deletion of a blog', () => {
+	let token = null
 	beforeEach(async () => {
 		await Blog.deleteMany({})
-		await Blog.insertMany(helper.manyBlogs)
-	})
-    
-	test('success with status 204 if is valid id', async () => {
-		const blogsAtStart = await helper.blogsInDb()
-		const blogToRemove = blogsAtStart[0]
-		await api
-			.delete(`/api/blogs/${blogToRemove.id}`)
-			.expect(204)
-		const blogsAtEnd = await helper.blogsInDb()
-		expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
-    
-		const titles = blogsAtEnd.map((blog) => blog.title)
-		expect(titles).not.toContain(blogToRemove.title)
+		await User.deleteMany({})
 
+		const passwordHash = await bcrypt.hash('sexo', 10)
+		const user = await new User({ username: 'ro2ot', passwordHash }).save()
+
+		const userForToken = { username: 'ro2ot', id: user.id }
+		token = jwt.sign(userForToken, config.SECRET)
+
+		const newBlog = {
+			title: 'some blog',
+			author: 'some author',
+			url: 'https://www.example.com',
+		}
+
+		await api
+			.post('/api/blogs')
+			.set('Authorization', `bearer ${token}`)
+			.send(newBlog)
+			.expect(201)
+			.expect('Content-Type', /application\/json/)
+
+		return token
+	})
+
+	test('succeeds with status code 204 if id is valid', async () => {
+		const blogsAtStart = await Blog.find({}).populate('user')
+		const blogToDelete = blogsAtStart[0]
+
+		await api
+			.delete(`/api/blogs/${blogToDelete.id}`)
+			.set('Authorization', `bearer ${token}`)
+			.expect(204)
+
+		const blogsAtEnd = await Blog.find({}).populate('user')
+		expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
+
+		const titles = blogsAtEnd.map((blog) => blog.title)
+		expect(titles).not.toContain(blogToDelete.title)
+	})
+
+	test('fails with status code 401 if user is not authorized', async () => {
+		const blogsAtStart = await Blog.find({}).populate('user')
+		const blogToDelete = blogsAtStart[0]
+
+		token = null
+
+		await api
+			.delete(`/api/blogs/${blogToDelete.id}`)
+			.set('Authorization', `${token}`)
+			.expect(401)
+
+		const blogsAtEnd = await Blog.find({}).populate('user')
+
+		expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
+		expect(blogsAtStart).toEqual(blogsAtEnd)
 	})
 })
 
-describe('when a blogs is updated', () => {
-    	beforeEach(async () => {
-		await Blog.deleteMany({})
-		await Blog.insertMany(helper.manyBlogs)
-	})
-    
+describe('updating a blog', () => {
 	test('succeeds with status 200 if id is valid', async () => {
 		const blogsAtStart = await helper.blogsInDb()
 		const blogToUpdate = blogsAtStart[0]
-        
+
 		await api
 			.put(`/api/blogs/${blogToUpdate.id}`)
-			.send({
-				likes: 30000
-			})
+			.send({ likes: 10 })
 			.expect(200)
-        
+
 		const blogsAtEnd = await helper.blogsInDb()
-		const blogUpdated = blogsAtEnd[0]
-		expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
-		expect(blogUpdated.likes).toBe(30000)
+		const updatedBlog = blogsAtEnd[0]
+		expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+		expect(updatedBlog.likes).toBe(10)
 	})
 })
 
-
-afterAll(async () => {
-	await mongoose.connection.close()
+afterAll(() => {
+	mongoose.connection.close()
 })
